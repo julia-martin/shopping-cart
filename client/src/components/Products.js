@@ -1,7 +1,7 @@
 import React from "react";
 import Product from "./Product";
 
-const Products = ({ products, handleAddToCart }) => {
+const Products = ({ products, setProducts, handleAddToCart, cart, setCart }) => {
   return (
     <div class="product-listing">
       <h2>Products</h2>
@@ -9,9 +9,13 @@ const Products = ({ products, handleAddToCart }) => {
       {products.map((product) => {
         return (
           <Product
-            key={product.id}
+            key={product['_id']}
             {...product}
             handleAddToCart={handleAddToCart}
+            setProducts={setProducts}
+            products={products}
+            cart={cart}
+            setCart={setCart}
           />
         );
       })}

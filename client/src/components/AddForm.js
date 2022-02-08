@@ -1,34 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from 'axios';
 
-const AddForm = () => {
+const AddForm = ({ setProducts, products }) => {
+  const [ formVisible, setFormVisible ] = useState(false);
+  const [ name, setName ] = useState('');
+  const [ price, setPrice ] = useState('');
+  const [ qty, setQty ] = useState('');
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    const response = await axios.post('/api/products', { title: name, price, quantity: qty });
+    const newProduct = response.data;
+    setProducts([...products, newProduct ]);
+
+    setName('');
+    setPrice('');
+    setQty('');
+  };
+
+  const handleCancel = (e) => {
+    setFormVisible(false);
+  };
+
   return (
-    <div class="add-form visible">
-      <p>
-        <a class="button add-product-button">Add A Product</a>
-      </p>
-      <h3>Add Product</h3>
-      <form>
-        <div class="input-group">
-          <label for="product-name">Product Name</label>
-          <input type="text" id="product-name" value="" />
-        </div>
+    <>
+      <div className={`add-form ${formVisible ? "visible" : ""}`}>
+        <p>
+          <a className="button add-product-button" onClick={() => setFormVisible(true)}>Add A Product</a>
+        </p>
+        <h3>Add Product</h3>
+        <form>
+          <div className="input-group">
+            <label for="product-name">Product Name</label>
+            <input onChange={(e) => setName(e.target.value)} type="text" id="product-name" value={name} />
+          </div>
 
-        <div class="input-group">
-          <label for="product-price">Price</label>
-          <input type="text" id="product-price" value="" />
-        </div>
+          <div className="input-group">
+            <label for="product-price">Price</label>
+            <input onChange={(e) => setPrice(e.target.value)} type="text" id="product-price" value={price} />
+          </div>
 
-        <div class="input-group">
-          <label for="product-quantity">Quantity</label>
-          <input type="text" id="product-quantity" value="" />
-        </div>
+          <div className="input-group">
+            <label for="product-quantity">Quantity</label>
+            <input onChange={(e) => setQty(e.target.value)} type="text" id="product-quantity" value={qty} />
+          </div>
 
-        <div class="actions form-actions">
-          <a class="button">Add</a>
-          <a class="button">Cancel</a>
-        </div>
-      </form>
-    </div>
+          <div className="actions form-actions">
+            <a className="button" onClick={handleAddProduct}>Add</a>
+            <a className="button" onClick={handleCancel}>Cancel</a>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 

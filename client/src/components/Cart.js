@@ -1,16 +1,15 @@
 import React from "react";
+import axios from 'axios';
 
-const Cart = ({ products, cart }) => {
-  let productsInCart = {};
-
-  cart.forEach((id) => {
-    if (productsInCart[id]) {
-      productsInCart[id]["quantity"] += 1;
-    } else {
-      let productToAdd = products.find((product) => product.id === id);
-      productsInCart[id] = productToAdd;
+const Cart = ({ products, cart, setCart }) => {
+  const handleCheckout = async (e) => {
+    try {
+      await axios.post('/api/checkout');
+      setCart([]);
+    } catch (err) {
+      console.log(err);
     }
-  });
+  };
 
   if (cart.length > 0) {
     return (
@@ -23,26 +22,23 @@ const Cart = ({ products, cart }) => {
             <th>Price</th>
           </tr>
 
-          {/* {products} */}
-
-          <tr>
-            <td>Amazon Kindle E-reader</td>
-            <td>2</td>
-            <td>$79.99</td>
-          </tr>
-          <tr>
-            <td>Apple 10.5-Inch iPad Pro</td>
-            <td>1</td>
-            <td>$649.99</td>
-          </tr>
-
+          {cart.map(item => {
+            return (
+              <tr>
+                <td>{item.title}</td>
+                <td>{item.quantity}</td>
+                <td>{`$${item.price}`}</td>
+              </tr>
+            );
+          })
+          }
           <tr>
             <td colspan="3" class="total">
-              Total: $729.98
+              Total: {`$${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}`}
             </td>
           </tr>
         </table>
-        <a class="button checkout">Checkout</a>
+        <a onClick={handleCheckout} class="button checkout">Checkout</a>
       </div>
     );
   } else {
