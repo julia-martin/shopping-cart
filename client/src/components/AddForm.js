@@ -1,22 +1,35 @@
 import React, { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
-const AddForm = ({ setProducts, products }) => {
-  const [ formVisible, setFormVisible ] = useState(false);
-  const [ name, setName ] = useState('');
-  const [ price, setPrice ] = useState('');
-  const [ qty, setQty ] = useState('');
+const AddForm = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products);
+  const [formVisible, setFormVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [qty, setQty] = useState("");
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
     console.log("Adding product");
-    const response = await axios.post('/api/products', { title: name, price, quantity: qty });
+    const response = await axios.post("/api/products", {
+      title: name,
+      price,
+      quantity: qty,
+    });
     const newProduct = response.data;
-    setProducts([...products, newProduct ]);
 
-    setName('');
-    setPrice('');
-    setQty('');
+    dispatch({
+      type: "ADD_PRODUCT",
+      payload: { product: newProduct },
+    });
+
+    // setProducts([...products, newProduct]);
+
+    setName("");
+    setPrice("");
+    setQty("");
   };
 
   const handleCancel = (e) => {
@@ -26,28 +39,57 @@ const AddForm = ({ setProducts, products }) => {
   return (
     <div className={`add-form ${formVisible ? "visible" : ""}`}>
       <p>
-        <a className="button add-product-button" onClick={() => setFormVisible(true)} data-testid="openFormButton">Add A Product</a>
+        <a
+          className="button add-product-button"
+          onClick={() => setFormVisible(true)}
+          data-testid="openFormButton"
+        >
+          Add A Product
+        </a>
       </p>
       <h3>Add Product</h3>
       <form aria-label="form">
         <div className="input-group">
           <label htmlFor="product-name">Product Name</label>
-          <input onChange={(e) => setName(e.target.value)} type="text" id="product-name" value={name} />
+          <input
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            id="product-name"
+            value={name}
+          />
         </div>
 
         <div className="input-group">
           <label htmlFor="product-price">Price</label>
-          <input onChange={(e) => setPrice(e.target.value)} type="text" id="product-price" value={price} />
+          <input
+            onChange={(e) => setPrice(e.target.value)}
+            type="text"
+            id="product-price"
+            value={price}
+          />
         </div>
 
         <div className="input-group">
           <label htmlFor="product-quantity">Quantity</label>
-          <input onChange={(e) => setQty(e.target.value)} type="text" id="product-quantity" value={qty} />
+          <input
+            onChange={(e) => setQty(e.target.value)}
+            type="text"
+            id="product-quantity"
+            value={qty}
+          />
         </div>
 
         <div className="actions form-actions">
-          <a data-testid="submitProduct" className="button" onClick={handleAddProduct}>Add</a>
-          <a className="button" onClick={handleCancel}>Cancel</a>
+          <a
+            data-testid="submitProduct"
+            className="button"
+            onClick={handleAddProduct}
+          >
+            Add
+          </a>
+          <a className="button" onClick={handleCancel}>
+            Cancel
+          </a>
         </div>
       </form>
     </div>

@@ -1,11 +1,23 @@
-import React from "react";
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
-const Cart = ({ products, cart, setCart }) => {
+const Cart = () => {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+
+  const getCartData = async () => {
+    const { data } = await axios.get("/api/cart");
+    console.log(data);
+    dispatch({ type: "CART_RECEIVED", payload: { cart: data } });
+    // setCart(data);
+  };
+  useEffect(() => getCartData(), [dispatch]);
+
   const handleCheckout = async (e) => {
     try {
-      await axios.post('/api/checkout');
-      setCart([]);
+      await axios.post("/api/checkout");
+      dispatch({ type: "CHECKOUT" });
     } catch (err) {
       console.log(err);
     }
@@ -22,7 +34,7 @@ const Cart = ({ products, cart, setCart }) => {
             <th>Price</th>
           </tr>
 
-          {cart.map(item => {
+          {cart.map((item) => {
             return (
               <tr>
                 <td>{item.title}</td>
@@ -30,15 +42,19 @@ const Cart = ({ products, cart, setCart }) => {
                 <td>{`$${item.price}`}</td>
               </tr>
             );
-          })
-          }
+          })}
           <tr>
             <td colspan="3" class="total">
-              Total: {`$${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}`}
+              Total:{" "}
+              {`$${cart
+                .reduce((sum, item) => sum + item.price * item.quantity, 0)
+                .toFixed(2)}`}
             </td>
           </tr>
         </table>
-        <a onClick={handleCheckout} class="button checkout">Checkout</a>
+        <a onClick={handleCheckout} class="button checkout">
+          Checkout
+        </a>
       </div>
     );
   } else {
