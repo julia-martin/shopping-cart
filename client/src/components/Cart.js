@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { cartReceived, checkedOut } from '../actions/cartActions.js';
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const getCartData = async () => {
-    const { data } = await axios.get("/api/cart");
-    console.log(data);
-    dispatch({ type: "CART_RECEIVED", payload: { cart: data } });
-    // setCart(data);
-  };
-  useEffect(() => getCartData(), [dispatch]);
+  useEffect(() => dispatch(cartReceived()), [dispatch]);
 
   const handleCheckout = async (e) => {
     try {
-      await axios.post("/api/checkout");
-      dispatch({ type: "CHECKOUT" });
+      dispatch(checkedOut());
     } catch (err) {
       console.log(err);
     }

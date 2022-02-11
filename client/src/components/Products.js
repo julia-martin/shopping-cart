@@ -1,22 +1,14 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import Product from "./Product";
 import { useSelector, useDispatch } from "react-redux";
+import { productsReceived } from '../actions/productActions.js';
 
 const Products = ({ handleAddToCart }) => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
 
   useEffect(() => {
-    const getProducts = async () => {
-      const { data } = await axios.get("/api/products");
-      console.log(data);
-      dispatch({ type: "PRODUCTS_RECEIVED", payload: { products: data } });
-      // setProducts(data);
-    };
-
-    console.log("this fires");
-    getProducts();
+    dispatch(productsReceived());
   }, [dispatch]);
 
   console.log(products);

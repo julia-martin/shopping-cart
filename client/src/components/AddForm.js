@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { productAdded } from '../actions/productActions.js';
 
 const AddForm = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products);
   const [formVisible, setFormVisible] = useState(false);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -12,20 +11,12 @@ const AddForm = () => {
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    console.log("Adding product");
-    const response = await axios.post("/api/products", {
+
+    dispatch(productAdded({
       title: name,
       price,
       quantity: qty,
-    });
-    const newProduct = response.data;
-
-    dispatch({
-      type: "ADD_PRODUCT",
-      payload: { product: newProduct },
-    });
-
-    // setProducts([...products, newProduct]);
+    }));
 
     setName("");
     setPrice("");
