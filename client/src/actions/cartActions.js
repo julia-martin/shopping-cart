@@ -26,7 +26,7 @@ export const addedToCart = (productId) => {
 };
 
 export const checkoutSuccess = () => {
-
+  return { type: "CHECKOUT" };
 };
 
 export const checkedOut = () => {

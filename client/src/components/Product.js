@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import EditForm from "./EditForm";
 import { useDispatch } from "react-redux";
 import { productEdited, productDeleted } from '../actions/productActions.js';
+import { addedToCart } from '../actions/cartActions.js';
 
-const Product = ({ price, quantity, title, handleAddToCart, _id, setCart }) => {
+const Product = ({ price, quantity, title, _id, setCart }) => {
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
 
@@ -28,6 +29,17 @@ const Product = ({ price, quantity, title, handleAddToCart, _id, setCart }) => {
       e.preventDefault();
       try {
         dispatch(productDeleted(id));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  };
+
+  const handleAddToCart = (id) => {
+    return async (e) => {
+      e.preventDefault();
+      try {
+        dispatch(addedToCart(id));
       } catch (err) {
         console.log(err);
       }

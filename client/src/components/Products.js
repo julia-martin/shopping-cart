@@ -3,7 +3,7 @@ import Product from "./Product";
 import { useSelector, useDispatch } from "react-redux";
 import { productsReceived } from '../actions/productActions.js';
 
-const Products = ({ handleAddToCart }) => {
+const Products = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
 
@@ -21,7 +21,6 @@ const Products = ({ handleAddToCart }) => {
           <Product
             key={product["_id"]}
             {...product}
-            handleAddToCart={handleAddToCart}
           />
         );
       })}
