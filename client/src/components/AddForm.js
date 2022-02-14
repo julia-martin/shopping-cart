@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import axios from 'axios';
+import React, { useState, useContext } from "react";
+import { addProduct, ProductContext } from "../context/product-context";
 
-const AddForm = ({ setProducts, products }) => {
+const AddForm = () => {
+  const { dispatch } = useContext(ProductContext);
   const [ formVisible, setFormVisible ] = useState(false);
-  const [ name, setName ] = useState('');
+  const [ title, setTitle ] = useState('');
   const [ price, setPrice ] = useState('');
-  const [ qty, setQty ] = useState('');
+  const [ quantity, setQuantity ] = useState('');
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    console.log("Adding product");
-    const response = await axios.post('/api/products', { title: name, price, quantity: qty });
-    const newProduct = response.data;
-    setProducts([...products, newProduct ]);
+    addProduct(dispatch, { title, price, quantity });
 
-    setName('');
+    setTitle('');
     setPrice('');
-    setQty('');
+    setQuantity('');
   };
 
   const handleCancel = (e) => {
@@ -31,8 +29,8 @@ const AddForm = ({ setProducts, products }) => {
       <h3>Add Product</h3>
       <form aria-label="form">
         <div className="input-group">
-          <label htmlFor="product-name">Product Name</label>
-          <input onChange={(e) => setName(e.target.value)} type="text" id="product-name" value={name} />
+          <label htmlFor="product-title">Product Name</label>
+          <input onChange={(e) => setTitle(e.target.value)} type="text" id="product-title" value={title} />
         </div>
 
         <div className="input-group">
@@ -42,7 +40,7 @@ const AddForm = ({ setProducts, products }) => {
 
         <div className="input-group">
           <label htmlFor="product-quantity">Quantity</label>
-          <input onChange={(e) => setQty(e.target.value)} type="text" id="product-quantity" value={qty} />
+          <input onChange={(e) => setQuantity(e.target.value)} type="text" id="product-quantity" value={quantity} />
         </div>
 
         <div className="actions form-actions">

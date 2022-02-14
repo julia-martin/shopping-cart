@@ -1,15 +1,9 @@
-import React from "react";
-import axios from 'axios';
+import React, { useContext } from "react";
+import { checkout, CartContext } from "../context/cart-context";
+// import axios from 'axios';
 
-const Cart = ({ products, cart, setCart }) => {
-  const handleCheckout = async (e) => {
-    try {
-      await axios.post('/api/checkout');
-      setCart([]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+const Cart = () => {
+  const { cart, dispatch } = useContext(CartContext);
 
   if (cart.length > 0) {
     return (
@@ -38,7 +32,7 @@ const Cart = ({ products, cart, setCart }) => {
             </td>
           </tr>
         </table>
-        <a onClick={handleCheckout} class="button checkout">Checkout</a>
+        <a onClick={() => checkout(dispatch)} class="button checkout">Checkout</a>
       </div>
     );
   } else {
